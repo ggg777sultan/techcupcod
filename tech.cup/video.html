@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain storm</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5;
+  }
+  #container {
+    text-align: center;
+  }
+  #target {
+    width: 200px;
+    height: 200px;
+    background-color: lightgray;
+    display: none;
+  }
+  #resultModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>Reaction Time Test</h1>
+    <p>Click the screen when the box turns green.</p>
+    <div id="target"></div>
+    <button id="startButton">Start</button>
+  </div>
+
+  <div id="resultModal">
+    <div id="modalContent">
+      <h2>Test Results</h2>
+      <p>Your reaction time: <span id="reactionTime"></span> ms</p>
+      <p>Recommended reaction time: less than 300 ms</p>
+      <button id="restartButton">Restart</button>
+    </div>
+  </div>
+
+  <script>
+    const target = document.getElementById("target");
+    const startButton = document.getElementById("startButton");
+    const resultModal = document.getElementById("resultModal");
+    const reactionTimeSpan = document.getElementById("reactionTime");
+    const restartButton = document.getElementById("restartButton");
+    let startTime, endTime;
+
+    function getRandomTime(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function showTarget() {
+      target.style.backgroundColor = "green";
+      startTime = new Date().getTime();
+      target.addEventListener("click", checkReaction);
+    }
+
+    function checkReaction() {
+      if (target.style.backgroundColor === "green") {
+        endTime = new Date().getTime();
+        const reactionTime = endTime - startTime;
+        reactionTimeSpan.textContent = reactionTime;
+        resultModal.style.display = "flex";
+        target.style.backgroundColor = "red"; // Prevent further clicks
+        target.removeEventListener("click", checkReaction);
+      }
+    }
+
+    startButton.addEventListener("click", function() {
+      startButton.style.display = "none";
+      setTimeout(showTarget, getRandomTime(1000, 3000));
+    });
+
+    restartButton.addEventListener("click", function() {
+      resultModal.style.display = "none";
+      target.style.backgroundColor = "lightgray";
+      startButton.style.display = "block";
+    });
+  </script>
+</body>
+</html>

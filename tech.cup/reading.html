@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain storm</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background:#1b1b32;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+  }
+  #container {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  #syllables {
+    font-size: 18px;
+    color: #888;
+    margin-top: 10px;
+  }
+  #audioButton {
+    margin-top: 10px;
+  }
+  h1{
+    box-sizing: 25px;
+  }
+  
+  .container{
+    width: 420px;
+    background-color: transparent;
+    border: 5px solid rgba(255,255,255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+
+  }
+  button{
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 8px 28px;
+    border: 2px solid #fff ;
+    border-radius: 4px;
+    color: #fff;
+    margin-top: 10px;
+    background-color:transparent;
+}
+button:hover{
+    background: #2f54b9;
+    border-color: #000000;
+    color: #151515;
+}
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>учимся читать слова</h1>
+    <div id="container">
+      <button id="flipButton" onclick="flipWord()">слоги</button>
+      <button id="audioButton" onclick="speakWord()">звучание</button>
+      <button id="changeWordButton" onclick="changeWord()">поменять слово</button>
+    </div>
+  </div>
+
+  <script>
+    const words = [
+      { word: "яблоко", syllables: ["я", "бло", "ко"], audio: "path/to/apple.mp3" },
+      { word: "банан", syllables: ["ба", "нан"], audio: "path/to/banana.mp3" },
+      { word: "киви", syllables: ["ки", "ви"], audio: "path/to/kiwi.mp3" },
+      { word: "малина", syllables: ["ма", "ли", "на"], audio: "path/to/raspberry.mp3" }
+    ];
+
+    let currentWordIndex = 0;
+    let flipped = false;
+
+    const container = document.getElementById("container");
+    const flipButton = document.getElementById("flipButton");
+    const audioButton = document.getElementById("audioButton");
+    const changeWordButton = document.getElementById("changeWordButton");
+    const speech = new SpeechSynthesisUtterance();
+
+    function displayWord() {
+      const word = words[currentWordIndex].word;
+      const syllables = words[currentWordIndex].syllables.join(" - ");
+
+      container.innerHTML = `
+        <button id="flipButton" onclick="flipWord()">сло-ги</button>
+        <button id="audioButton" onclick="speakWord()">звучание</button>
+        <button id="changeWordButton" onclick="changeWord()">поменять слово</button>
+        <p>${flipped ? word : syllables}</p>
+      `;
+
+      if (flipped) {
+        audioButton.disabled = false;
+      } else {
+        audioButton.disabled = true;
+      }
+    }
+
+    function flipWord() {
+      flipped = !flipped;
+      displayWord();
+    }
+
+    function speakWord() {
+      const audioPath = words[currentWordIndex].audio;
+      if (audioPath) {
+        speech.text = words[currentWordIndex].word;
+        speech.lang = "ru-RU";
+        window.speechSynthesis.speak(speech);
+      }
+    }
+
+    function changeWord() {
+      currentWordIndex = (currentWordIndex + 1) % words.length;
+      flipped = false;
+      displayWord();
+    }
+
+    displayWord();
+  </script>
+</body>
+</html>

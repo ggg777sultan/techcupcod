@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brain storm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="math2.css">
+<link rel="shortcut icon" href="https://static.vecteezy.com/ti/vetor-gratis/p3/203769-conceito-de-brainstorming-no-preto-grátis-vetor.jpg" type="image/jpg">
+<style>
+
+  .container{
+    width: 420px;
+    background-color: transparent;
+    border: 2px solid rgba(255,255,255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+
+  }
+  #answer{
+    border-radius: 20px;
+    position: relative;
+    width: 100%;
+    height: 35px;
+    margin: 30px 0;
+  }
+  #game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  #header {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  #score {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  #question {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  #answer {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  #feedback {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  .submit{
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 8px 28px;
+    border: 2px solid #000000 ;
+    border-radius: 8px;
+    color: #fff;
+    margin-top: 10px;
+    background-color:transparent;
+  }
+  .submit:hover{
+    background: #4a61c9;
+    border-color: #000000;
+    color: #151515;
+  }
+</style>
+<title>Brain storm</title>
+</head>
+<body>
+  <div class="container">
+    <div id="game-container">
+      <div id="header"> арифметика</div>
+      <div id="score">дұрыс жауаптар саны: <span id="currentScore">0</span></div>
+      <div id="question">қанша болады  <span id="num1"></span> + <span id="num2"></span>?</div>
+      <input type="number" id="answer" placeholder="жауапты жазыңыз" />
+      <button id="submitBtn" class="submit">Ұсыну</button>
+      <p id="feedback"></p>
+      <div id="time">қалды: <span id="timeLeft">20</span></div>
+    </div>
+  </div>
+
+  <script>
+    let num1, num2, currentScore = 0, timerInterval, timeLeft = 20, currentDifficulty = 1;
+
+    function generateNumbers() {
+      return [Math.floor(Math.random() * (currentDifficulty * 10)), Math.floor(Math.random() * (currentDifficulty * 10))];
+    }
+
+    function updateQuestion() {
+      [num1, num2] = generateNumbers();
+      document.getElementById('num1').textContent = num1;
+      document.getElementById('num2').textContent = num2;
+      document.getElementById('answer').value = '';
+      document.getElementById('feedback').textContent = '';
+      startTimer();
+    }
+
+    function checkAnswer() {
+      clearInterval(timerInterval);
+      const userAnswer = parseFloat(document.getElementById('answer').value);
+      const correctAnswer = num1 + num2;
+      
+      if (userAnswer === correctAnswer) {
+        document.getElementById('feedback').textContent = 'Correct! New question:';
+        currentScore++;
+        document.getElementById('currentScore').textContent = currentScore;
+        currentDifficulty++;
+        updateQuestion();
+      } else {
+        document.getElementById('feedback').textContent = `Incorrect. The correct answer was ${correctAnswer}. Try again.`;
+        updateQuestion();
+      }
+    }
+
+    function startTimer() {
+      timeLeft = 20;
+      document.getElementById('timeLeft').textContent = timeLeft;
+      timerInterval = setInterval(function() {
+        timeLeft--;
+        document.getElementById('timeLeft').textContent = timeLeft;
+        if (timeLeft === 0) {
+          clearInterval(timerInterval);
+          document.getElementById('feedback').textContent = `Time's up! The correct answer was ${num1 + num2}. Next question:`;
+          updateQuestion();
+        }
+      }, 1000);
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', checkAnswer);
+    updateQuestion();
+  </script>
+</body>
+</html>
